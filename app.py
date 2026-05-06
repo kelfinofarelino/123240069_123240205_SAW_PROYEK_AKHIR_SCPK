@@ -15,7 +15,7 @@ st.markdown("Aplikasi ini menggunakan metode **Simple Additive Weighting (SAW)**
 # ==========================================
 @st.cache_data
 def load_and_preprocess_data():
-    df = pd.read_csv('Hotel List Jakarta - TRAVELOKA - 1-30.csv')
+    df = pd.read_csv('dataset/Hotel List Jakarta - TRAVELOKA - 1-30.csv')
     df = df.dropna(subset=['Harga']).reset_index(drop=True)
     
     # Cleansing Harga
