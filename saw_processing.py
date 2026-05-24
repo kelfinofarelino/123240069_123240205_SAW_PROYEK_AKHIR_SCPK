@@ -18,6 +18,7 @@ def load_and_preprocess_data(filepath):
     """Memuat data, melakukan data cleansing, dan membentuk Matriks X"""
     df = pd.read_csv(filepath)
     df = df.dropna(subset=["Harga"]).reset_index(drop=True)
+    df = df.drop_duplicates(subset=["Hotel"], keep="first").reset_index(drop=True)
 
     # Cleansing Harga
     df["Harga_Clean"] = df["Harga"].str.replace(".", "", regex=False).astype(float)
