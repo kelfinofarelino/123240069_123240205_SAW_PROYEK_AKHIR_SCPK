@@ -113,34 +113,41 @@ with tab2:
 
 with tab3:
     st.subheader("3. Perhitungan Nilai Preferensi (V) & Perankingan")
+    
+    # TOMBOL EKSEKUSI
+    hitung_button = st.button("Hitung Perangkingan SAW")
 
     if is_weight_valid:
         st.markdown(
             "Tabel ini menampilkan **Skor Akhir** bersanding dengan **Matriks Awal** secara lengkap."
         )
 
-        # Eksekusi skor akhir menggunakan module logic
-        df_final = saw.calculate_final_score(df_matrix, df_norm, W)
+        if hitung_button: 
+            # Eksekusi skor akhir menggunakan module logic
+            df_final = saw.calculate_final_score(df_matrix, df_norm, W)
 
-        st.dataframe(
-            df_final.style.format(
-                {
+            st.dataframe(
+                df_final.style.format({
                     "Skor Akhir": "{:.4f}",
                     "C1 (Harga)": "Rp {:,.0f}",
                     "C2 (Rating)": "{:.1f}",
                     "C3 (Star)": "{:.0f}",
                     "C4 (Reviews)": "{:.0f}",
                     "C5 (Fasilitas)": "{:.0f}",
-                }
-            ).background_gradient(cmap="Greens", subset=["Skor Akhir"]),
-            use_container_width=True,
-        )
+                }).background_gradient(cmap="Greens", subset=["Skor Akhir"]),
+                use_container_width=True,
+            )
 
-        top_hotel = df_final.iloc[0]["Alternatif (Hotel)"]
-        top_score = df_final.iloc[0]["Skor Akhir"]
-        st.success(
-            f"🎉 **Rekomendasi Terbaik:** Alternatif terbaik adalah **{top_hotel}** dengan skor akhir **{top_score:.4f}**."
-        )
+            top_hotel = df_final.iloc[0]["Alternatif (Hotel)"]
+            top_score = df_final.iloc[0]["Skor Akhir"]
+            st.success(f"🎉 **Rekomendasi Terbaik:** Alternatif terbaik adalah **{top_hotel}** dengan skor akhir **{top_score:.4f}**.")
+            
+            # Menyimpan hasil ke session_state agar grafik di Tab 4 tetap bisa membaca data df_final
+            st.session_state['df_final'] = df_final
+        
+        elif 'df_final' not in st.session_state:
+            st.info("Silakan tekan tombol **'Hitung Perangkingan SAW'** untuk melihat hasil akhir.")
+            
     else:
         st.error(
             f"❌ **Perhitungan Dihentikan.** Total bobot saat ini adalah {total_bobot}. Silakan perbaiki input bobot di menu samping kiri agar jumlahnya tepat 100."
@@ -150,10 +157,14 @@ with tab4:
     st.subheader("📈 Visualisasi Ranking Hotel")
 
     if is_weight_valid:
-        st.markdown("Menampilkan Top 15 Hotel berdasarkan Skor Preferensi Akhir (V)")
-        chart_data = df_final.head(15)[["Alternatif (Hotel)", "Skor Akhir"]]
-        chart_data = chart_data.set_index("Alternatif (Hotel)")
-        st.bar_chart(chart_data, color="#2ECC71")
+        if 'df_final' in st.session_state:
+            df_final_chart = st.session_state['df_final']
+            st.markdown("Menampilkan Top 15 Hotel berdasarkan Skor Preferensi Akhir (V)")
+            chart_data = df_final_chart.head(15)[["Alternatif (Hotel)", "Skor Akhir"]]
+            chart_data = chart_data.set_index("Alternatif (Hotel)")
+            st.bar_chart(chart_data, color="#2ECC71")
+        else:
+            st.info("Visualisasi akan muncul setelah perhitungan dilakukan di Tab 3.")
     else:
         st.error(
             "❌ Grafik tidak dapat ditampilkan karena proporsi bobot belum mencapai 100."
