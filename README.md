@@ -1,48 +1,48 @@
-# 🏨 Sistem Cerdas Pendukung Keputusan Pemilihan Hotel di Bali
+# 🏨 Intelligent Decision Support System for Hotel Selection in Bali
 
-Repositori ini berisi proyek akhir untuk mata kuliah **Praktikum Sistem Cerdas Pendukung Keputusan** (Plug H). Aplikasi ini merupakan Sistem Pendukung Keputusan (SPK) berbasis web yang dibangun menggunakan **Streamlit** dan menerapkan metode **Simple Additive Weighting (SAW)** untuk memberikan rekomendasi pemilihan hotel terbaik di Bali menggunakan data riil hasil *scraping* dari platform Tiket.com.
+This repository contains the final project for the **Intelligent Systems and Decision Support Practicum** (Plug H). This application is a web-based Decision Support System (DSS) built using **Streamlit**, implementing the **Simple Additive Weighting (SAW)** method to provide the best hotel recommendations in Bali using real scraped data from the Tiket.com platform.
 
 ---
 
-## 👥 Identitas Kelompok (Plug-H)
-Proyek ini dikembangkan oleh:
+## 👥 Team Identity (Plug-H)
+This project was developed by:
 * **Adhafa Joan Putranto** (123240069) — [adhafajp](https://github.com/adhafajp)
 * **Muhammad Farelino Kelfin** (123240205) — [kelfinofarelino](https://github.com/kelfinofarelino)
 
 ---
 
-## ✨ Fitur Utama
-Aplikasi SPK ini dilengkapi dengan antarmuka grafis (GUI) berbasis web yang interaktif dengan fitur-fitur unggulan berikut:
+## ✨ Main Features
+This DSS application is equipped with an interactive web-based Graphical User Interface (GUI) featuring the following highlights:
 
-* **Navigasi Layout Terstruktur (Tabs):** Memisahkan alur pemrosesan data secara rapi ke dalam 5 halaman (*Profil Kelompok, Matriks Keputusan X, Normalisasi R, Hasil Perangkingan V, dan Visualisasi*).
-* **Tampilan Dataset Interaktif:** Menyajikan visualisasi data mentah hotel dan hasil kalkulasi matriks dalam bentuk tabel dinamis yang dapat di-*sort* atau diperbesar menggunakan `st.dataframe`.
-* **Input Bobot Dinamis:** Pengguna dapat menyesuaikan proporsi bobot untuk 5 kriteria berbeda melalui komponen interaktif di *sidebar* (kombinasi `st.slider` dan `st.number_input`) lengkap dengan sistem validasi total nilai wajib berjumlah 100.
-* **Eksekusi Manual (*On-Demand*):** Perhitungan rumus matematis SAW diikat menggunakan tombol eksekusi (`st.button`). Proses kalkulasi hanya berjalan jika tombol ditekan, sehingga menghemat *resource* memori dan mencegah kalkulasi otomatis yang berat setiap kali bobot digeser.
-* **Visualisasi Peringkat:** Menampilkan grafik batang (*Bar Chart*) interaktif untuk membandingkan nilai preferensi akhir dari **Top 15 Hotel Terbaik** di Bali.
-* **Mekanisme Pengolahan Data Kebal Error (*Robust Data Cleaning*):** Kode dibekali fungsi penanganan otomatis terhadap karakter gaib (*Byte Order Mark* via `utf-8-sig`), pencarian kolom berbasis pencocokan teks kata kunci (*fuzzy matching*), serta konversi otomatis tanda desimal koma (`,`) khas dataset lokal menjadi tanda titik (`.`) agar dapat diproses secara matematis oleh Python.
+* **Structured Layout Navigation (Tabs):** Neatly separates the data processing workflow into 5 pages (*Team Profile, Initial Matrix X, Normalization R, Ranking Results V, and Visualization*).
+* **Interactive Dataset Display:** Presents raw hotel data and matrix calculation results in dynamic tables that can be sorted or expanded using `st.dataframe`.
+* **Dynamic Weight Input:** Users can adjust weight proportions for 5 different criteria via interactive sidebar components (a combination of `st.slider` and `st.number_input`), complete with a validation system requiring the total weight to equal exactly 100.
+* **Manual Execution (*On-Demand*):** The SAW mathematical calculation is bound to an execution button (`st.button`). The calculation only runs when the button is pressed, saving memory resources and preventing heavy automatic recalculations every time a weight is adjusted.
+* **Ranking Visualization:** Displays an interactive Bar Chart comparing the final preference scores of the **Top 15 Best Hotels** in Bali.
+* **Robust Data Cleaning Mechanism:** The code is equipped with automatic handling for hidden characters (*Byte Order Mark* via `utf-8-sig`), keyword-based column detection (*fuzzy matching*), and automatic conversion of local comma decimals (`,`) to dots (`.`) to ensure seamless mathematical processing by Python.
 
 ---
 
-## 💾 Link Dataset
-Dataset yang digunakan dalam sistem ini diambil dari Kaggle:
+## 💾 Dataset Link
+The dataset used in this system was obtained from Kaggle:
 * **Source:** [Hotel Listings in Bali (Scraped Data from Tiket.com)](https://www.kaggle.com/datasets/anisyanugraheni/hotel-listings-in-bali-scraped-data)
-* **File Name:** `Updated_ScrapingHotelTiketcom.csv` (Mencakup data nama hotel riil beserta parameter harganya).
+* **File Name:** `Updated_ScrapingHotelTiketcom.csv` (Includes actual hotel names along with their price parameters).
 
 ---
 
-## 📊 Kriteria Penilaian (SAW)
-Sistem ini menggunakan 5 kriteria utama untuk menentukan nilai utilitas hotel:
-1. **C1 - Harga (*Price Starts From*):** Atribut *Cost* (Semakin murah harga sewa kamar, semakin baik).
-2. **C2 - Rating:** Atribut *Benefit* (Semakin tinggi skor penilaian pengunjung, semakin baik).
-3. **C3 - Star / Bintang:** Atribut *Benefit* (Semakin tinggi tingkatan kelas bintang hotel, semakin baik).
-4. **C4 - Jumlah Ulasan (*Review Count*):** Atribut *Benefit* (Semakin banyak jumlah ulasan, mengindikasikan tingkat kepercayaan hotel yang semakin baik).
-5. **C5 - Fasilitas (*Facilities*):** Atribut *Benefit* (Sistem menghitung secara dinamis total jumlah fasilitas yang tersedia dari baris teks data. Semakin lengkap fasilitasnya, semakin baik).
+## 📊 Assessment Criteria (SAW)
+This system utilizes 5 main criteria to determine the utility value of the hotels:
+1. **C1 - Price (*Price Starts From*):** *Cost* attribute (The cheaper the room rate, the better).
+2. **C2 - Rating:** *Benefit* attribute (The higher the guest rating score, the better).
+3. **C3 - Star:** *Benefit* attribute (The higher the hotel's star classification, the better).
+4. **C4 - Number of Reviews (*Review Count*):** *Benefit* attribute (A higher number of reviews indicates better hotel credibility).
+5. **C5 - Facilities:** *Benefit* attribute (The system dynamically calculates the total number of available facilities from the text data. The more comprehensive the facilities, the better).
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
-* **Bahasa Pemrograman:** Python 3.12+
-* **Framework GUI:** Streamlit
-* **Pustaka Analisis Data:** Pandas, NumPy
+## 🛠️ Technologies Used
+* **Programming Language:** Python 3.12+
+* **GUI Framework:** Streamlit
+* **Data Analysis Libraries:** Pandas, NumPy
 
 ---
