@@ -123,10 +123,45 @@ with tab_calc:
         st.session_state['show_results'] = False
 
 with tab_chart:
-    st.subheader("4. Top 15 Best Hotels")
+    st.subheader("📈 Data Visualizations")
+    
     if is_weight_valid and st.session_state.get('show_results', False) and 'df_final_result' in st.session_state:
-        df_chart = st.session_state['df_final_result'].head(15)
-        chart_data = df_chart[['Alternative (Hotel)', 'Final Score']].set_index('Alternative (Hotel)')
-        st.bar_chart(chart_data, color="#2ECC71")
+        df_full = st.session_state['df_final_result']
+        
+        # Mengambil data 15 hotel terbaik berdasarkan Final Score
+        df_top15 = df_full.head(15)
+        
+        # ---------------------------------------------------------
+        # Visualisasi 1: BAR CHART (Peringkat Skor Akhir)
+        # ---------------------------------------------------------
+        st.markdown("#### 1. Top 15 Best Hotels (Bar Chart)")
+        st.markdown("*Menampilkan peringkat 15 hotel terbaik berdasarkan skor rekomendasi akhir.*")
+        chart_data_bar = df_top15[['Alternative (Hotel)', 'Final Score']].set_index('Alternative (Hotel)')
+        st.bar_chart(chart_data_bar, color="#2ECC71") # Warna Hijau
+        
+        st.divider()
+        
+        # ---------------------------------------------------------
+        # Visualisasi 2: SCATTER CHART (Korelasi Harga vs Skor)
+        # ---------------------------------------------------------
+        st.markdown("#### 2. Persebaran Harga vs Final Score (Scatter Chart)")
+        st.markdown("*Melihat hubungan apakah hotel dengan harga yang lebih mahal selalu memiliki skor akhir yang lebih tinggi.*")
+        st.scatter_chart(
+            data=df_full, 
+            x='C1 (Price)', 
+            y='Final Score', 
+            color="#3498DB" # Warna Biru
+        )
+        
+        st.divider()
+        
+        # ---------------------------------------------------------
+        # Visualisasi 3: AREA CHART (Tren Jumlah Ulasan)
+        # ---------------------------------------------------------
+        st.markdown("#### 3. Jumlah Ulasan pada Top 15 Hotel Terbaik (Area Chart)")
+        st.markdown("*Melihat popularitas (jumlah review/ulasan) dari ke-15 hotel terbaik tersebut.*")
+        chart_data_area = df_top15[['Alternative (Hotel)', 'C4 (Reviews)']].set_index('Alternative (Hotel)')
+        st.area_chart(chart_data_area, color="#E74C3C") # Warna Merah
+        
     else:
-        st.info("Calculate the data first in the Result Tab.")
+        st.info("💡 Hitung data terlebih dahulu di tab '🏆 Result (V)' untuk melihat visualisasi.")
