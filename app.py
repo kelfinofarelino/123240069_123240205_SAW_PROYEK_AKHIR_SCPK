@@ -78,14 +78,7 @@ with tab_profile:
 
 with tab_data:
     st.subheader("1. Initial Decision Matrix (X)")
-    
-    jumlah_data = len(df_matrix)
-    st.info(f"📚 **Total data yang digunakan:** {jumlah_data} hotel")
-    
-    df_display = df_matrix.reset_index()
-    df_display.index = df_display.index + 1
-    
-    st.dataframe(df_display, use_container_width=True)
+    st.dataframe(df_matrix, use_container_width=True)
 
 with tab_norm:
     st.subheader("2. Normalized Matrix (R)")
